@@ -22,8 +22,12 @@ jobs:
     - name: Generate betaDebug APK
       run: ./gradlew assembleBetaDebug --stacktrace
       
+    - name: Rename betaDebug APK
+      run: mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/apps-android-commons-betaDebug-$(git log -n 1 --format='%h').apk
+
     - name: Upload betaDebug APK
       uses: actions/upload-artifact@v3
       with:
         name: betaDebugAPK
-        path: app/build/outputs/apk/beta/debug/app-*.apk
+        path: app/build/outputs/apk/beta/debug/*.apk
+        retention-days: 30
