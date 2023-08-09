@@ -271,7 +271,7 @@ android {
             buildConfigField "String", "SIGNUP_SUCCESS_REDIRECTION_URL", "\"https://commons.m.wikimedia.org/w/index.php?title=Main_Page&welcome=yes\""
             buildConfigField "String", "FORGOT_PASSWORD_URL", "\"https://commons.wikimedia.org/wiki/Special:PasswordReset\""
             buildConfigField "String", "PRIVACY_POLICY_URL", "\"https://github.com/commons-app/commons-app-documentation/blob/master/android/Privacy-policy.md\""
-            buildConfigField "String", "ACCOUNT_TYPE", "\"fr.free.nrw.commons.mn\""
+            buildConfigField "String", "ACCOUNT_TYPE", "\"fr.free.nrw.commons\""
             buildConfigField "String", "CONTRIBUTION_AUTHORITY", "\"fr.free.nrw.commons.mn.contributions.contentprovider\""
             buildConfigField "String", "MODIFICATION_AUTHORITY", "\"fr.free.nrw.commons.mn.modifications.contentprovider\""
             buildConfigField "String", "CATEGORY_AUTHORITY", "\"fr.free.nrw.commons.mn.categories.contentprovider\""
