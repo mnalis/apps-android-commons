@@ -8,6 +8,7 @@
   <string name="commons_github">Fonto-kodexo di Commons che Github</string>
   <string name="commons_logo">Logotipo* di Commons</string>
   <string name="commons_website">ret-situo di Commons</string>
+  <string name="exit_location_picker">Ekirar la lokizo-selektero</string>
   <string name="submit">Sendar</string>
   <string name="add_another_description">Adjuntar nova deskripto</string>
   <string name="add_new_contribution">Adjuntar nova kontributado</string>
@@ -20,7 +21,9 @@
   <string name="show_captions_description">Deskripto</string>
   <string name="nearby_row_image">Imajo</string>
   <string name="nearby_all">Omna</string>
+  <string name="nearby_filter_toggle">Irar adsupre</string>
   <string name="nearby_filter_search">Serchar vidado</string>
+  <string name="nearby_filter_state">Loko-stando</string>
   <string name="appwidget_img">Diala imajo</string>
   <plurals name="uploads_pending_notification_indicator">
     <item quantity="one">%1$d sendanta arkivo</item>
@@ -31,6 +34,10 @@
     <item quantity="other">(%1$d)</item>
   </plurals>
   <string name="starting_uploads">Komencar sendaji</string>
+  <plurals name="starting_multiple_uploads">
+    <item quantity="one">Karganta %d arkivo</item>
+    <item quantity="other">Karganta %d arkivi</item>
+  </plurals>
   <plurals name="multiple_uploads_title">
     <item quantity="one">%d arkivo sendita</item>
     <item quantity="other">%d arkivi sendita</item>
@@ -55,6 +62,7 @@
   <string name="app_name">Commons</string>
   <string name="menu_settings">Parametri</string>
   <string name="intent_share_upload_label">Sendar a Commons</string>
+  <string name="upload_in_progress">Sendo progresanta</string>
   <string name="username">Nomo dil uzero</string>
   <string name="password">Pasovorto</string>
   <string name="login_credential">Enirar en la konto \'\'Commons Beta\'\'</string>
@@ -63,10 +71,13 @@
   <string name="signup">Enirar</string>
   <string name="logging_in_title">Eniranta</string>
   <string name="logging_in_message">Voluntez vartar...</string>
+  <string name="updating_caption_title">Aktualiganta etiketi e deskripturi</string>
   <string name="updating_caption_message">Voluntez vartar...</string>
   <string name="login_success">Eniro sucesoza!</string>
   <string name="login_failed">Eniro faliis!</string>
   <string name="upload_failed">Arkivo ne trovita. Voluntez probar altr arkivo.</string>
+  <string name="unrestricted_battery_mode">Ka desmuntar l\'optimizo di la baterio?</string>
+  <string name="suggest_unrestricted_mode">Sendar plu kam 3 imaji esas plu efikiva kande l\'optimizo di la baterio esas desmuntita. Voluntez desmuntar l\'optimizo di la baterio del ajusti dil utensilo de Commons, por plugrandigar l\'efikeso. \n\nQuale desmuntar l\'optimizo-sistemo di la baterio:\n\n#: Kliktez la butono \"ajusti\" (\'\'Settings\'\') adinfre.\n\n#: Selektez \"ne optimizita (\'\'Not optimized\'\') por omna utensili (\'\'All apps\'\').\n\n#: Serchez \"Commons\" o \"fr.free.nrw.commons\".\n\n#: Kliktez ol e selektez \"ne optimizar\" (\'\'Don\'t optimize\'\').\n\n#: Kliktez \"facita\" (\'\'Done\'\').</string>
   <string name="authentication_failed">L\'autentikigo faliis, voluntez itere enirar.</string>
   <string name="uploading_started">Komencis sendar!</string>
   <string name="uploading_queued">Sendajo ajornata (modulo \"limitizita konekto\" aktiva)</string>
@@ -104,6 +115,7 @@
   <string name="provider_modifications">Modifikuri</string>
   <string name="menu_upload_single">Kargar</string>
   <string name="categories_search_text_hint">Serchar kategorii</string>
+  <string name="depicts_search_text_hint">Serchez kozi quin vua \'\'media\'\' montras (monti, \'\'Taj Mahal\'\', edc.)</string>
   <string name="menu_save_categories">Registragar</string>
   <string name="refresh_button">Rinovigar</string>
   <string name="display_list_button">Listar</string>

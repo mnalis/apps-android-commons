@@ -10,6 +10,7 @@ import static fr.free.nrw.commons.upload.mediaDetails.UploadMediaDetailFragment.
 import static fr.free.nrw.commons.upload.mediaDetails.UploadMediaDetailFragment.LAST_ZOOM;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
@@ -21,7 +22,6 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -56,6 +56,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import fr.free.nrw.commons.MapStyle;
 import fr.free.nrw.commons.R;
 import fr.free.nrw.commons.Utils;
+import fr.free.nrw.commons.filepicker.Constants;
 import fr.free.nrw.commons.kvstore.JsonKvStore;
 import fr.free.nrw.commons.location.LocationPermissionsHelper;
 import fr.free.nrw.commons.location.LocationPermissionsHelper.Dialog;
@@ -72,7 +73,7 @@ import timber.log.Timber;
  * Helps to pick location and return the result with an intent
  */
 public class LocationPickerActivity extends BaseActivity implements OnMapReadyCallback,
-    OnCameraMoveStartedListener, OnCameraIdleListener, Observer<CameraPosition> {
+    OnCameraMoveStartedListener, OnCameraIdleListener, Observer<CameraPosition>, LocationPermissionCallback {
 
     /**
      * DROPPED_MARKER_LAYER_ID : id for layer
@@ -313,7 +314,7 @@ public class LocationPickerActivity extends BaseActivity implements OnMapReadyCa
     /**
      * Show the location in map app
      */
-    public void showInMap(){
+    public void showInMap() {
         Utils.handleGeoCoordinates(this,
             new fr.free.nrw.commons.location.LatLng(cameraPosition.target.getLatitude(),
                 cameraPosition.target.getLongitude(), 0.0f));
@@ -386,6 +387,8 @@ public class LocationPickerActivity extends BaseActivity implements OnMapReadyCa
                 });
 
 
+        } else {
+            requestLocationPermissions();
         }
     }
 
@@ -457,13 +460,13 @@ public class LocationPickerActivity extends BaseActivity implements OnMapReadyCa
      */
     private void addCenterOnGPSButton(){
         fabCenterOnLocation = findViewById(R.id.center_on_gps);
-        fabCenterOnLocation.setOnClickListener(view -> getCenter());
+        fabCenterOnLocation.setOnClickListener(view -> requestLocationPermissions());
     }
 
     /**
      * Center the map at user's current location
      */
-    private void getCenter() {
+    private void requestLocationPermissions() {
         LocationPermissionsHelper.Dialog locationAccessDialog = new Dialog(
             R.string.location_permission_title,
             R.string.upload_map_location_access
@@ -474,28 +477,19 @@ public class LocationPickerActivity extends BaseActivity implements OnMapReadyCa
             R.string.upload_map_location_access
         );
         LocationPermissionsHelper locationPermissionsHelper = new LocationPermissionsHelper(
-            this, locationManager, new LocationPermissionCallback() {
-            @Override
-            public void onLocationPermissionDenied(String toastMessage) {
-                // Do nothing
-            }
-
-            @Override
-            public void onLocationPermissionGranted() {
-                fr.free.nrw.commons.location.LatLng currLocation = locationManager.getLastLocation();
-                if (currLocation != null) {
-                    final CameraPosition position;
-                    position = new CameraPosition.Builder()
-                        .target(new com.mapbox.mapboxsdk.geometry.LatLng(currLocation.getLatitude(),
-                            currLocation.getLongitude(), 0)) // Sets the new camera position
-                        .zoom(mapboxMap.getCameraPosition().zoom) // Same zoom level
-                        .build();
-
-                    mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
-                }
-            }
-        });
+            this, locationManager, this);
         locationPermissionsHelper.handleLocationPermissions(locationAccessDialog, locationOffDialog);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions,
+        @NonNull final int[] grantResults) {
+        if (requestCode == Constants.RequestCodes.LOCATION && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            onLocationPermissionGranted();
+        } else {
+            onLocationPermissionDenied("");
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -538,5 +532,28 @@ public class LocationPickerActivity extends BaseActivity implements OnMapReadyCa
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    @Override
+    public void onLocationPermissionDenied(String toastMessage) {
+        //do nothing
+    }
+
+    @Override
+    public void onLocationPermissionGranted() {
+        if (mapboxMap.getStyle() != null) {
+            enableLocationComponent(mapboxMap.getStyle());
+        }
+        fr.free.nrw.commons.location.LatLng currLocation = locationManager.getLastLocation();
+        if (currLocation != null) {
+            final CameraPosition position;
+            position = new CameraPosition.Builder()
+                .target(new com.mapbox.mapboxsdk.geometry.LatLng(currLocation.getLatitude(),
+                    currLocation.getLongitude(), 0)) // Sets the new camera position
+                .zoom(mapboxMap.getCameraPosition().zoom) // Same zoom level
+                .build();
+
+            mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position), 1000);
+        }
     }
 }

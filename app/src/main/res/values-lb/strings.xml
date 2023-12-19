@@ -46,6 +46,7 @@
   <string name="bullet">•</string>
   <string name="menu_settings">Astellungen</string>
   <string name="intent_share_upload_label">Op Commons eroplueden</string>
+  <string name="upload_in_progress">Eroplueden amgaang</string>
   <string name="username">Benotzernumm</string>
   <string name="password">Passwuert</string>
   <string name="login_credential">Loggt Iech an Äre Commons-Beta-Benotzerkont an</string>
@@ -104,7 +105,7 @@
   <string name="menu_about">Iwwer</string>
   <string name="about_license">D\'App Wikimedia Commons ass eng \'Open-Source-App\' déi vu Fräiwëllege vun der Wikimedia Foundation entwéckelt gouf an och vun hinnen ënnerhal gëtt. D\'Wikimedia Foundation ass net an d\'Entwécklung oder den Ënnerhalt vun der App implizéiert.</string>
   <string name="about_improve">Leet wgl. e &lt;a href=\"%1$s\"&gt;GitHub-Antrag&lt;/a&gt; u fir Feeler ze mellen a Proposen ze maachen.</string>
-  <string name="about_privacy_policy">Dateschutz</string>
+  <string name="about_privacy_policy">Dateschutzrichtlinnen</string>
   <string name="about_credits">Merci</string>
   <string name="title_activity_about">Iwwer</string>
   <string name="menu_feedback">Feedback schécken (per E-Mail)</string>
@@ -117,7 +118,7 @@
   <string name="menu_download">Eroflueden</string>
   <string name="preference_license">Standardlizenz</string>
   <string name="use_previous">Viregen Titel a Beschreiwung benotzen</string>
-  <string name="preference_theme">Thema</string>
+  <string name="preference_theme">Faarfschema</string>
   <string name="license_name_cc_by_sa_four">Attribution-ShareAlike 4.0</string>
   <string name="license_name_cc_by_four">Attribution 4.0</string>
   <string name="license_name_cc_by_sa">CC Attribution-ShareAlike 3.0</string>
@@ -268,6 +269,7 @@
   <string name="continue_message">Virufueren</string>
   <string name="correct">Richteg Äntwert</string>
   <string name="wrong">Falsch Äntwert</string>
+  <string name="rotate">Dréinen</string>
   <string name="nominate_delete">Nominéiere fir ze Läschen</string>
   <string name="delete">Läschen</string>
   <string name="Achievements">Realisatiounen</string>
@@ -278,6 +280,7 @@
   <string name="level">Niveau</string>
   <string name="images_uploaded">Eropgeluede Biller</string>
   <string name="image_reverts">Biller net zréckgesat</string>
+  <string name="images_used_by_wiki">Benotzte Biller</string>
   <string name="error_occurred">Feeler opgetrueden!</string>
   <string name="notifications_channel_name_all">Notifikatioun vu Commons</string>
   <string name="contributions_fragment">Kontributiounen</string>
@@ -306,7 +309,12 @@
   <string name="back_button_continue">Eropluede weiderféieren</string>
   <string name="never_ask_again">Dëst ni méi froen</string>
   <string name="achievements_fetch_failed_ultimate_achievement">Dir hutt esou vill Kontributioune gemaach datt eise Berechnungssystem iwwerfuerdert ass. Dëst ass déi bescht Leeschtung.</string>
+  <string name="option_allow">Erlaben</string>
+  <string name="option_dismiss">Verwerfen</string>
   <string name="nominate_for_deletion_done">Fäerdeg</string>
+  <string name="send_thank_success_title">Merci schécken: Erfollegräich</string>
+  <string name="send_thank_failure_title">Merci schécken: Feeler</string>
+  <string name="send_thank_toast">Merci fir %1$s schécken</string>
   <string name="review_copyright">Entsprécht dat de Copyright-Reegelen?</string>
   <string name="review_category">Ass dëst richteg kategoriséiert?</string>
   <string name="review_spam_explanation">Klickt op NEEN fir dëst Bild fir d\'Läsche virzeschloen, falls et guer net nëtzlech ass.</string>
@@ -331,6 +339,7 @@
   <string name="exif_tag_name_author">Auteur</string>
   <string name="exif_tag_name_copyright">Copyright</string>
   <string name="exif_tag_name_location">Plaz</string>
+  <string name="exif_tag_name_cameraModel">Kamera-Modell</string>
   <string name="exif_tag_name_serialNumbers">Seriennummeren</string>
   <string name="exif_tag_name_software">Software</string>
   <string name="share_text">Luet Fotoen direkt vun Ärem Handy op Wikimedia Commons erop. Luet d\'Commons-App elo erof: %1$s</string>
@@ -452,4 +461,9 @@
   <string name="error_feedback">Feeler beim Schécke vum Feedback</string>
   <string name="enter_description">Wéi ass Äre Feedback?</string>
   <string name="your_feedback">Äre Feedback</string>
+  <string name="menu_view_report">Mellen</string>
+  <string name="report_violation">Verstouss mellen</string>
+  <string name="report_user">Dëse Benotzer mellen</string>
+  <string name="report_content">Dësen Inhalt mellen</string>
+  <string name="request_user_block">Ufroe fir dëse Benotzer ze spären</string>
 </resources>

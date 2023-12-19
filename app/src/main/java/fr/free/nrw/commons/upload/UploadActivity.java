@@ -2,15 +2,21 @@ package fr.free.nrw.commons.upload;
 
 import static fr.free.nrw.commons.contributions.ContributionController.ACTION_INTERNAL_UPLOADS;
 import static fr.free.nrw.commons.utils.PermissionUtils.PERMISSIONS_STORAGE;
+import static fr.free.nrw.commons.utils.PermissionUtils.checkPermissionsAndPerformAction;
 import static fr.free.nrw.commons.wikidata.WikidataConstants.PLACE_OBJECT;
+import static fr.free.nrw.commons.wikidata.WikidataConstants.SELECTED_NEARBY_PLACE;
+import static fr.free.nrw.commons.wikidata.WikidataConstants.SELECTED_NEARBY_PLACE_CATEGORY;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
@@ -19,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -36,6 +43,8 @@ import fr.free.nrw.commons.R;
 import fr.free.nrw.commons.auth.LoginActivity;
 import fr.free.nrw.commons.auth.SessionManager;
 import fr.free.nrw.commons.contributions.ContributionController;
+import fr.free.nrw.commons.contributions.MainActivity;
+import fr.free.nrw.commons.filepicker.Constants.RequestCodes;
 import fr.free.nrw.commons.filepicker.UploadableFile;
 import fr.free.nrw.commons.kvstore.JsonKvStore;
 import fr.free.nrw.commons.location.LatLng;
@@ -57,6 +66,7 @@ import fr.free.nrw.commons.utils.ViewUtil;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import java.io.File;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -137,6 +147,23 @@ public class UploadActivity extends BaseActivity implements UploadContract.View,
      */
     public static HashMap<Place,Boolean> nearbyPopupAnswers;
 
+    /**
+     * A private boolean variable to control whether a permissions dialog should be shown
+     * when necessary. Initially, it is set to `true`, indicating that the permissions dialog
+     * should be displayed if permissions are missing and it is first time calling
+     * `checkStoragePermissions` method.
+     *
+     * This variable is used in the `checkStoragePermissions` method to determine whether to
+     * show a permissions dialog to the user if the required permissions are not granted.
+     *
+     * If `showPermissionsDialog` is set to `true` and the necessary permissions are missing,
+     * a permissions dialog will be displayed to request the required permissions. If set
+     * to `false`, the dialog won't be shown.
+     *
+     * @see UploadActivity#checkStoragePermissions()
+     */
+    private boolean showPermissionsDialog = true;
+
     @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,11 +175,6 @@ public class UploadActivity extends BaseActivity implements UploadContract.View,
         compositeDisposable = new CompositeDisposable();
         init();
         nearbyPopupAnswers = new HashMap<>();
-        PermissionUtils.checkPermissionsAndPerformAction(this,
-            PERMISSIONS_STORAGE,
-            this::receiveSharedItems,
-            R.string.storage_permission_title,
-            R.string.write_storage_permission_rationale_for_image_share);
         //getting the current dpi of the device and if it is less than 320dp i.e. overlapping
         //threshold, thumbnails automatically minimizes
         DisplayMetrics metrics = getResources().getDisplayMetrics();
@@ -165,6 +187,7 @@ public class UploadActivity extends BaseActivity implements UploadContract.View,
         }
         locationManager.requestLocationUpdatesFromProvider(LocationManager.GPS_PROVIDER);
         locationManager.requestLocationUpdatesFromProvider(LocationManager.NETWORK_PROVIDER);
+        checkStoragePermissions();
     }
 
     private void init() {
@@ -230,7 +253,6 @@ public class UploadActivity extends BaseActivity implements UploadContract.View,
             askUserToLogIn();
         }
         checkBlockStatus();
-        checkStoragePermissions();
     }
 
     /**
@@ -251,17 +273,36 @@ public class UploadActivity extends BaseActivity implements UploadContract.View,
                 true)));
     }
 
-    private void checkStoragePermissions() {
+    public void checkStoragePermissions() {
+        // Check if all required permissions are granted
         final boolean hasAllPermissions = PermissionUtils.hasPermission(this, PERMISSIONS_STORAGE);
-        if (!hasAllPermissions) {
-            PermissionUtils.checkPermissionsAndPerformAction(this,
-                PERMISSIONS_STORAGE,
-                () -> {
-                    //TODO handle this
-                },
-                R.string.storage_permission_title,
-                R.string.write_storage_permission_rationale_for_image_share);
+        if (hasAllPermissions) {
+            // All required permissions are granted, so enable UI elements and perform actions
+            receiveSharedItems();
+            cvContainerTopCard.setVisibility(View.VISIBLE);
+        } else {
+            // Permissions are missing
+            cvContainerTopCard.setVisibility(View.INVISIBLE);
+            if(showPermissionsDialog){
+                checkPermissionsAndPerformAction(this,
+                    () -> {
+                        cvContainerTopCard.setVisibility(View.VISIBLE);
+                        this.receiveSharedItems();
+                    },() -> {
+                        this.showPermissionsDialog = true;
+                        this.checkStoragePermissions();
+                        },
+                    R.string.storage_permission_title,
+                    R.string.write_storage_permission_rationale_for_image_share,
+                    PERMISSIONS_STORAGE);
+            }
         }
+        /* If all permissions are not granted and a dialog is already showing on screen
+         showPermissionsDialog will set to false making it not show dialog again onResume,
+         but if user Denies any permission showPermissionsDialog will be to true
+         and permissions dialog will be shown again.
+         */
+        this.showPermissionsDialog = hasAllPermissions ;
     }
 
     @Override
@@ -348,7 +389,44 @@ public class UploadActivity extends BaseActivity implements UploadContract.View,
         startActivity(loginIntent);
     }
 
+    @Override
+    public void onRequestPermissionsResult(final int requestCode,
+        @NonNull final String[] permissions,
+        @NonNull final int[] grantResults) {
+        boolean areAllGranted = false;
+        if (requestCode == RequestCodes.STORAGE) {
+            if (VERSION.SDK_INT >= VERSION_CODES.M) {
+                for (int i = 0; i < grantResults.length; i++) {
+                    String permission = permissions[i];
+                    areAllGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+                    if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                        boolean showRationale = shouldShowRequestPermissionRationale(permission);
+                        if (!showRationale) {
+                            DialogUtil.showAlertDialog(this,
+                                getString(R.string.storage_permissions_denied),
+                                getString(R.string.unable_to_share_upload_item),
+                                getString(android.R.string.ok),
+                                this::finish,
+                                false);
+                        } else {
+                            DialogUtil.showAlertDialog(this,
+                                getString(R.string.storage_permission_title),
+                                getString(
+                                    R.string.write_storage_permission_rationale_for_image_share),
+                                getString(android.R.string.ok),
+                                this::checkStoragePermissions,
+                                false);
+                        }
+                    }
+                }
 
+                if (areAllGranted) {
+                    receiveSharedItems();
+                }
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -449,6 +527,23 @@ public class UploadActivity extends BaseActivity implements UploadContract.View,
                         presenter.deletePictureAtIndex(index);
                     }
 
+                    /**
+                     * Changes the thumbnail of an UploadableFile at the specified index.
+                     * This method updates the list of uploadableFiles by replacing the UploadableFile
+                     * at the given index with a new UploadableFile created from the provided file path.
+                     * After updating the list, it notifies the RecyclerView's adapter to refresh its data,
+                     * ensuring that the thumbnail change is reflected in the UI.
+                     *
+                     * @param index The index of the UploadableFile to be updated.
+                     * @param filepath The file path of the new thumbnail image.
+                     */
+                    @Override
+                    public void changeThumbnail(int index, String filepath) {
+                        uploadableFiles.remove(index);
+                        uploadableFiles.add(index, new UploadableFile(new File(filepath)));
+                        rvThumbnails.getAdapter().notifyDataSetChanged();
+                    }
+
                     @Override
                     public void onNextButtonClicked(int index) {
                         UploadActivity.this.onNextButtonClicked(index);
@@ -483,9 +578,17 @@ public class UploadActivity extends BaseActivity implements UploadContract.View,
             }
 
             uploadCategoriesFragment = new UploadCategoriesFragment();
+            if (place != null) {
+                Bundle categoryBundle = new Bundle();
+                categoryBundle.putString(SELECTED_NEARBY_PLACE_CATEGORY, place.getCategory());
+                uploadCategoriesFragment.setArguments(categoryBundle);
+            }
             uploadCategoriesFragment.setCallback(this);
 
             depictsFragment = new DepictsFragment();
+            Bundle placeBundle = new Bundle();
+            placeBundle.putParcelable(SELECTED_NEARBY_PLACE, place);
+            depictsFragment.setArguments(placeBundle);
             depictsFragment.setCallback(this);
 
             mediaLicenseFragment = new MediaLicenseFragment();
@@ -657,6 +760,25 @@ public class UploadActivity extends BaseActivity implements UploadContract.View,
         if (uploadCategoriesFragment != null) {
             uploadCategoriesFragment.setCallback(null);
         }
+    }
+
+    /**
+     * Get the value of the showPermissionDialog variable.
+     *
+     * @return {@code true} if Permission Dialog should be shown, {@code false} otherwise.
+     */
+    public boolean isShowPermissionsDialog() {
+        return showPermissionsDialog;
+    }
+
+    /**
+     * Set the value of the showPermissionDialog variable.
+     *
+     * @param showPermissionsDialog {@code true} to indicate to show
+     * Permissions Dialog if permissions are missing, {@code false} otherwise.
+     */
+    public void setShowPermissionsDialog(final boolean showPermissionsDialog) {
+        this.showPermissionsDialog = showPermissionsDialog;
     }
 
     /**

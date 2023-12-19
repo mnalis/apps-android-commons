@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static fr.free.nrw.commons.di.NetworkingModule.NAMED_LANGUAGE_WIKI_PEDIA_WIKI_SITE;
 
+import android.Manifest.permission;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -18,6 +19,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -32,22 +36,24 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import fr.free.nrw.commons.CommonsApplication;
 import fr.free.nrw.commons.Media;
 import fr.free.nrw.commons.R;
 import fr.free.nrw.commons.Utils;
 import fr.free.nrw.commons.auth.SessionManager;
 import fr.free.nrw.commons.di.CommonsDaggerSupportFragment;
-import fr.free.nrw.commons.utils.DialogUtil;
 import fr.free.nrw.commons.media.MediaClient;
+import fr.free.nrw.commons.profile.ProfileActivity;
+import fr.free.nrw.commons.utils.DialogUtil;
 import fr.free.nrw.commons.utils.SystemThemeUtils;
 import fr.free.nrw.commons.utils.ViewUtil;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import org.wikipedia.dataclient.WikiSite;
-import fr.free.nrw.commons.profile.ProfileActivity;
 
 
 /**
@@ -107,16 +113,39 @@ public class ContributionsListFragment extends CommonsDaggerSupportFragment impl
 
     private ContributionsListAdapter adapter;
 
-    @Nullable private Callback callback;
+    @Nullable
+    private Callback callback;
 
     private final int SPAN_COUNT_LANDSCAPE = 3;
     private final int SPAN_COUNT_PORTRAIT = 1;
 
     private int contributionsSize;
     String userName;
+    private ActivityResultLauncher<String[]> inAppCameraLocationPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), new ActivityResultCallback<Map<String, Boolean>>() {
+        @Override
+        public void onActivityResult(Map<String, Boolean> result) {
+            boolean areAllGranted = true;
+            for (final boolean b : result.values()) {
+                areAllGranted = areAllGranted && b;
+            }
+
+            if (areAllGranted) {
+                controller.locationPermissionCallback.onLocationPermissionGranted();
+            } else {
+                if (shouldShowRequestPermissionRationale(permission.ACCESS_FINE_LOCATION)) {
+                    controller.handleShowRationaleFlowCameraLocation(getActivity());
+                } else {
+                    controller.locationPermissionCallback.onLocationPermissionDenied(
+                        getActivity().getString(R.string.in_app_camera_location_permission_denied));
+                }
+            }
+        }
+    });
+
 
     @Override
-    public void onCreate(@Nullable @org.jetbrains.annotations.Nullable final Bundle savedInstanceState) {
+    public void onCreate(
+        @Nullable @org.jetbrains.annotations.Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Now that we are allowing this fragment to be started for
         // any userName- we expect it to be passed as an argument
@@ -297,7 +326,7 @@ public class ContributionsListFragment extends CommonsDaggerSupportFragment impl
     private void setListeners() {
         fabPlus.setOnClickListener(view -> animateFAB(isFabOpen));
         fabCamera.setOnClickListener(view -> {
-            controller.initiateCameraPick(getActivity());
+            controller.initiateCameraPick(getActivity(), inAppCameraLocationPermissionLauncher);
             animateFAB(isFabOpen);
         });
         fabGallery.setOnClickListener(view -> {
@@ -310,7 +339,7 @@ public class ContributionsListFragment extends CommonsDaggerSupportFragment impl
      * Launch Custom Selector.
      */
     @OnClick(R.id.fab_custom_gallery)
-    void launchCustomSelector(){
+    void launchCustomSelector() {
         controller.initiateCustomGalleryPickWithPermission(getActivity());
         animateFAB(isFabOpen);
     }
@@ -322,24 +351,24 @@ public class ContributionsListFragment extends CommonsDaggerSupportFragment impl
     private void animateFAB(final boolean isFabOpen) {
         this.isFabOpen = !isFabOpen;
         if (fabPlus.isShown()) {
-        if (isFabOpen) {
-            fabPlus.startAnimation(rotate_backward);
-            fabCamera.startAnimation(fab_close);
-            fabGallery.startAnimation(fab_close);
-            fabCustomGallery.startAnimation(fab_close);
-            fabCamera.hide();
-            fabGallery.hide();
-            fabCustomGallery.hide();
-        } else {
-            fabPlus.startAnimation(rotate_forward);
-            fabCamera.startAnimation(fab_open);
-            fabGallery.startAnimation(fab_open);
-            fabCustomGallery.startAnimation(fab_open);
-            fabCamera.show();
-            fabGallery.show();
-            fabCustomGallery.show();
-        }
-        this.isFabOpen = !isFabOpen;
+            if (isFabOpen) {
+                fabPlus.startAnimation(rotate_backward);
+                fabCamera.startAnimation(fab_close);
+                fabGallery.startAnimation(fab_close);
+                fabCustomGallery.startAnimation(fab_close);
+                fabCamera.hide();
+                fabGallery.hide();
+                fabCustomGallery.hide();
+            } else {
+                fabPlus.startAnimation(rotate_forward);
+                fabCamera.startAnimation(fab_open);
+                fabGallery.startAnimation(fab_open);
+                fabCustomGallery.startAnimation(fab_open);
+                fabCamera.show();
+                fabGallery.show();
+                fabCustomGallery.show();
+            }
+            this.isFabOpen = !isFabOpen;
         }
     }
 
@@ -393,14 +422,15 @@ public class ContributionsListFragment extends CommonsDaggerSupportFragment impl
     @Override
     public void deleteUpload(final Contribution contribution) {
         DialogUtil.showAlertDialog(getActivity(),
-            String.format(getString(R.string.cancelling_upload),
-                Locale.getDefault().getDisplayLanguage()),
-            String.format(getString(R.string.cancel_upload_dialog),
-                Locale.getDefault().getDisplayLanguage()),
-            "YES", "NO",
+            String.format(Locale.getDefault(),
+                getString(R.string.cancelling_upload)),
+            String.format(Locale.getDefault(),
+                getString(R.string.cancel_upload_dialog)),
+            String.format(Locale.getDefault(), getString(R.string.yes)), String.format(Locale.getDefault(), getString(R.string.no)),
             () -> {
                 ViewUtil.showShortToast(getContext(), R.string.cancelling_upload);
                 contributionsListPresenter.deleteUpload(contribution);
+                CommonsApplication.cancelledUploads.add(contribution.getPageId());
             }, () -> {
                 // Do nothing
             });
@@ -422,8 +452,7 @@ public class ContributionsListFragment extends CommonsDaggerSupportFragment impl
     public void addImageToWikipedia(Contribution contribution) {
         DialogUtil.showAlertDialog(getActivity(),
             getString(R.string.add_picture_to_wikipedia_article_title),
-            String.format(getString(R.string.add_picture_to_wikipedia_article_desc),
-                Locale.getDefault().getDisplayLanguage()),
+            getString(R.string.add_picture_to_wikipedia_article_desc),
             () -> {
                 showAddImageToWikipediaInstructions(contribution);
             }, () -> {
