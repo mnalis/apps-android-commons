@@ -662,7 +662,6 @@
   <string name="leaderboard_nearby">مجاور</string>
   <string name="leaderboard_used">مستخدَم</string>
   <string name="leaderboard_my_rank_button_text">ترتيبي</string>
-  <string name="map_attribution">&amp;#169; &lt;a href=\"https://www.mapbox.com/about/maps/\"&gt;Mapbox&lt;/a&gt; &amp;#169; &lt;a href=\"https://www.openstreetmap.org/copyright\"&gt;OpenStreetMap&lt;/a&gt; &lt;a href=\"https://www.mapbox.com/map-feedback/\"&gt;تحسين هذه الخريطة&lt;/a&gt;</string>
   <string name="limited_connection_enabled">وضع الاتصال المحدود مُمَكَّن!</string>
   <string name="limited_connection_disabled">وضع الاتصال المحدود مُعطل. سيجري استئناف التحميلات المعلقة الآن.</string>
   <string name="limited_connection_mode">وضع الاتصال المحدود</string>
@@ -762,4 +761,7 @@
   <string name="welcome_to_full_screen_mode_text">مرحبًا بك في وضع التحديد بملء الشاشة</string>
   <string name="full_screen_mode_zoom_info">استخدم إصبعين للتكبير والتصغير.</string>
   <string name="full_screen_mode_features_info" fuzzy="true">مرر سريعًا وطويلًا لتنفيذ هذه الإجراءات:! N! - يسار / يمين: انتقل إلى السابق / التالي! N! - لأعلى: حدد! N! - أسفل: وضع علامة على أنه ليس للتحميل.</string>
+  <string name="storage_permissions_denied">رُفض إذن التخزين</string>
+  <string name="unable_to_share_upload_item">تعذر مشاركة هذا العنصر</string>
+  <string name="permissions_are_required_for_functionality">الإذن مطلوب لهذه الوظيفة</string>
 </resources>
