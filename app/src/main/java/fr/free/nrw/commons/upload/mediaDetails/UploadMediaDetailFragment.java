@@ -6,15 +6,13 @@ import static fr.free.nrw.commons.utils.ImageUtils.FILE_NAME_EXISTS;
 import static fr.free.nrw.commons.utils.ImageUtils.getErrorMessageForResult;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -40,7 +38,6 @@ import fr.free.nrw.commons.contributions.MainActivity;
 import fr.free.nrw.commons.filepicker.UploadableFile;
 import fr.free.nrw.commons.kvstore.JsonKvStore;
 import fr.free.nrw.commons.location.LatLng;
-import fr.free.nrw.commons.location.LocationServiceManager;
 import fr.free.nrw.commons.nearby.Place;
 import fr.free.nrw.commons.recentlanguages.RecentLanguagesDao;
 import fr.free.nrw.commons.settings.Prefs;
@@ -54,8 +51,8 @@ import fr.free.nrw.commons.upload.UploadMediaDetailAdapter;
 import fr.free.nrw.commons.utils.DialogUtil;
 import fr.free.nrw.commons.utils.ImageUtils;
 import fr.free.nrw.commons.utils.ViewUtil;
-import fr.free.nrw.commons.R.drawable.*;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -63,12 +60,14 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import org.apache.commons.lang3.StringUtils;
 import timber.log.Timber;
+import android.os.Parcelable;
 
 public class UploadMediaDetailFragment extends UploadBaseFragment implements
     UploadMediaDetailsContract.View, UploadMediaDetailAdapter.EventListener {
 
     private static final int REQUEST_CODE = 1211;
     private static final int REQUEST_CODE_FOR_EDIT_ACTIVITY = 1212;
+    private static final int REQUEST_CODE_FOR_VOICE_INPUT = 1213;
 
     /**
      * A key for applicationKvStore. By this key we can retrieve the location of last UploadItem ex.
@@ -76,10 +75,19 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
      */
     public static final String LAST_LOCATION = "last_location_while_uploading";
     public static final String LAST_ZOOM = "last_zoom_level_while_uploading";
+
+
+    public static final String UPLOADABLE_FILE = "uploadable_file";
+
+    public static final String UPLOAD_MEDIA_DETAILS = "upload_media_detail_adapter";
     @BindView(R.id.tv_title)
     TextView tvTitle;
-    @BindView(R.id.ib_map)
-    AppCompatImageButton ibMap;
+    @BindView(R.id.location_image_view)
+    ImageView locationImageView;
+    @BindView(R.id.location_text_view)
+    TextView locationTextView;
+    @BindView(R.id.ll_location_status)
+    LinearLayout llLocationStatus;
     @BindView(R.id.ib_expand_collapse)
     AppCompatImageButton ibExpandCollapse;
     @BindView(R.id.ll_container_media_detail)
@@ -92,8 +100,8 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
     AppCompatButton btnNext;
     @BindView(R.id.btn_previous)
     AppCompatButton btnPrevious;
-    @BindView(R.id.edit_image)
-    AppCompatButton editImage;
+    @BindView(R.id.ll_edit_image)
+    LinearLayout llEditImage;
     @BindView(R.id.tooltip)
     ImageView tooltip;
 
@@ -152,7 +160,15 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        if(savedInstanceState!=null && uploadableFile==null) {
+            uploadableFile = savedInstanceState.getParcelable(UPLOADABLE_FILE);
+        }
+
     }
+
+
 
     public void setImageTobeUploaded(UploadableFile uploadableFile, Place place,
         LatLng inAppPictureLocation) {
@@ -166,15 +182,25 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
         @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_upload_media_detail_fragment, container, false);
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
         if (callback != null) {
             init();
         }
+
+        if(savedInstanceState!=null){
+                if(uploadMediaDetailAdapter.getItems().size()==0){
+                    uploadMediaDetailAdapter.setItems(savedInstanceState.getParcelableArrayList(UPLOAD_MEDIA_DETAILS));
+                    presenter.setUploadMediaDetails(uploadMediaDetailAdapter.getItems(), callback.getIndexInViewFlipper(this));
+                }
+        }
+
     }
 
     private void init() {
@@ -197,13 +223,15 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
         // If the image EXIF data contains the location, show the map icon with a green tick
         if (inAppPictureLocation != null ||
                 (uploadableFile != null && uploadableFile.hasLocation())) {
-            Drawable mapTick = getResources().getDrawable(R.drawable.ic_map_tick_white_24dp);
-            ibMap.setImageDrawable(mapTick);
+            Drawable mapTick = getResources().getDrawable(R.drawable.ic_map_available_20dp);
+            locationImageView.setImageDrawable(mapTick);
+            locationTextView.setText(R.string.edit_location);
         } else {
             // Otherwise, show the map icon with a red question mark
             Drawable mapQuestionMark =
-                getResources().getDrawable(R.drawable.ic_map_question_white_24dp);
-            ibMap.setImageDrawable(mapQuestionMark);
+                getResources().getDrawable(R.drawable.ic_map_not_available_20dp);
+            locationImageView.setImageDrawable(mapQuestionMark);
+            locationTextView.setText(R.string.add_location);
         }
 
         //If this is the last media, we have nothing to copy, lets not show the button
@@ -238,7 +266,7 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
      * init the description recycler veiw and caption recyclerview
      */
     private void initRecyclerView() {
-        uploadMediaDetailAdapter = new UploadMediaDetailAdapter(
+        uploadMediaDetailAdapter = new UploadMediaDetailAdapter(this,
             defaultKvStore.getString(Prefs.DESCRIPTION_LANGUAGE, ""), recentLanguagesDao);
         uploadMediaDetailAdapter.setCallback(this::showInfoAlert);
         uploadMediaDetailAdapter.setEventListener(this);
@@ -271,15 +299,7 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
         callback.onPreviousButtonClicked(callback.getIndexInViewFlipper(this));
     }
 
-    @OnClick(R.id.btn_add_description)
-    public void onButtonAddDescriptionClicked() {
-        UploadMediaDetail uploadMediaDetail = new UploadMediaDetail();
-        uploadMediaDetail.setManuallyAdded(true);//This was manually added by the user
-        uploadMediaDetailAdapter.addDescription(uploadMediaDetail);
-        rvDescriptions.smoothScrollToPosition(uploadMediaDetailAdapter.getItemCount()-1);
-    }
-
-    @OnClick(R.id.edit_image)
+    @OnClick(R.id.ll_edit_image)
     public void onEditButtonClicked() {
         presenter.onEditButtonClicked(callback.getIndexInViewFlipper(this));
     }
@@ -558,7 +578,6 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
     public void onActivityResult(final int requestCode, final int resultCode,
         @Nullable final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
 
             assert data != null;
@@ -597,6 +616,15 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
                 Timber.e(e);
             }
         }
+        else if (requestCode == REQUEST_CODE_FOR_VOICE_INPUT) {
+            if (resultCode == RESULT_OK && data != null) {
+                ArrayList<String> result = data.getStringArrayListExtra(
+                    RecognizerIntent.EXTRA_RESULTS);
+                uploadMediaDetailAdapter.handleSpeechResult(result.get(0));
+            }else {
+                Timber.e("Error %s", resultCode);
+            }
+        }
     }
 
     /**
@@ -613,8 +641,9 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
         editableUploadItem.getGpsCoords().setZoomLevel(zoom);
 
         // Replace the map icon using the one with a green tick
-        Drawable mapTick = getResources().getDrawable(R.drawable.ic_map_tick_white_24dp);
-        ibMap.setImageDrawable(mapTick);
+        Drawable mapTick = getResources().getDrawable(R.drawable.ic_map_available_20dp);
+        locationImageView.setImageDrawable(mapTick);
+        locationTextView.setText(R.string.edit_location);
 
         Toast.makeText(getContext(), "Location Updated", Toast.LENGTH_LONG).show();
 
@@ -676,8 +705,8 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
         presenter.onDetachView();
     }
 
-    @OnClick(R.id.rl_container_title)
-    public void onRlContainerTitleClicked() {
+    @OnClick(R.id.ll_container_title)
+    public void onLlContainerTitleClicked() {
         expandCollapseLlMediaDetail(!isExpanded);
     }
 
@@ -691,7 +720,7 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
         ibExpandCollapse.setRotation(ibExpandCollapse.getRotation() + 180);
     }
 
-    @OnClick(R.id.ib_map) public void onIbMapClicked() {
+    @OnClick(R.id.ll_location_status) public void onIbMapClicked() {
         presenter.onMapIconClicked(callback.getIndexInViewFlipper(this));
     }
 
@@ -703,6 +732,17 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
         btnNext.setEnabled(isNotEmpty);
         btnNext.setClickable(isNotEmpty);
         btnNext.setAlpha(isNotEmpty ? 1.0f : 0.5f);
+    }
+
+    /**
+     * Adds new language item to RecyclerView
+     */
+    @Override
+    public void addLanguage() {
+        UploadMediaDetail uploadMediaDetail = new UploadMediaDetail();
+        uploadMediaDetail.setManuallyAdded(true);//This was manually added by the user
+        uploadMediaDetailAdapter.addDescription(uploadMediaDetail);
+        rvDescriptions.smoothScrollToPosition(uploadMediaDetailAdapter.getItemCount()-1);
     }
 
     public interface UploadMediaDetailFragmentCallback extends Callback {
@@ -718,5 +758,19 @@ public class UploadMediaDetailFragment extends UploadBaseFragment implements
         presenter.copyTitleAndDescriptionToSubsequentMedia(callback.getIndexInViewFlipper(this));
         Toast.makeText(getContext(), getResources().getString(R.string.copied_successfully), Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if(uploadableFile!=null){
+            outState.putParcelable(UPLOADABLE_FILE,uploadableFile);
+        }
+        if(uploadMediaDetailAdapter!=null){
+            outState.putParcelableArrayList(UPLOAD_MEDIA_DETAILS,
+                (ArrayList<? extends Parcelable>) uploadMediaDetailAdapter.getItems());
+        }
+    }
+
 
 }
