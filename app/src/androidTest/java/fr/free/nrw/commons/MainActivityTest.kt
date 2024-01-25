@@ -96,7 +96,6 @@ class MainActivityTest {
 
     @Test
     fun testExplore() {
-        Intents.init()
         Espresso.onView(
             Matchers.allOf(
                 childAtPosition(
@@ -112,7 +111,6 @@ class MainActivityTest {
         Espresso.onView(ViewMatchers.withId(R.id.fragmentContainer))
             .check(matches(ViewMatchers.isDisplayed()))
         UITestHelper.sleep(1000)
-        Intents.release()
     }
 
     @Test
@@ -175,7 +173,7 @@ class MainActivityTest {
                 ViewMatchers.isDisplayed()
             )
         ).perform(ViewActions.click())
-        UITestHelper.sleep(10000)
+        UITestHelper.sleep(1000)
     }
 
     @Test
