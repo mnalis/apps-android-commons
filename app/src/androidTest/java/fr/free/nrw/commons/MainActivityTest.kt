@@ -48,8 +48,10 @@ class MainActivityTest {
         UITestHelper.loginUser()
         UITestHelper.skipWelcome()
         Intents.init()
+        UITestHelper.sleep(2000)
         Intents.intending(CoreMatchers.not(IntentMatchers.isInternal()))
             .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
+        UITestHelper.sleep(2000)
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val storeName = context.packageName + "_preferences"
         defaultKvStore = JsonKvStore(context, storeName, Gson())
@@ -57,6 +59,7 @@ class MainActivityTest {
 
     @After
     fun cleanUp() {
+        UITestHelper.sleep(2000)
         Intents.release()
     }
 
