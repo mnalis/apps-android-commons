@@ -18,16 +18,13 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.test.core.app.ApplicationProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.mapbox.mapboxsdk.camera.CameraPosition
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.maps.MapView
-import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import fr.free.nrw.commons.BaseMarker
+import fr.free.nrw.commons.OkHttpConnectionFactory
 import fr.free.nrw.commons.R
-import fr.free.nrw.commons.TestAppAdapter
 import fr.free.nrw.commons.TestCommonsApplication
+import fr.free.nrw.commons.createTestClient
 import fr.free.nrw.commons.bookmarks.locations.BookmarkLocationsDao
 import fr.free.nrw.commons.contributions.MainActivity
 import fr.free.nrw.commons.kvstore.JsonKvStore
@@ -53,7 +50,6 @@ import org.robolectric.annotation.Config
 import org.robolectric.annotation.LooperMode
 import org.robolectric.shadows.ShadowActivity
 import org.robolectric.shadows.ShadowAlertDialog
-import org.wikipedia.AppAdapter
 import java.lang.reflect.Method
 
 @RunWith(RobolectricTestRunner::class)
@@ -66,9 +62,6 @@ class NearbyParentFragmentUnitTest {
 
     @Mock
     private lateinit var applicationKvStore: JsonKvStore
-
-    @Mock
-    private lateinit var mapBox: MapboxMap
 
     @Mock
     private lateinit var presenter: NearbyParentFragmentPresenter
@@ -107,9 +100,6 @@ class NearbyParentFragmentUnitTest {
     private lateinit var bottomSheetDetails: View
 
     @Mock
-    private lateinit var marker: NearbyMarker
-
-    @Mock
     private lateinit var linearLayout: LinearLayout
 
     @Mock
@@ -132,7 +122,7 @@ class NearbyParentFragmentUnitTest {
         MockitoAnnotations.openMocks(this)
         context = ApplicationProvider.getApplicationContext()
 
-        AppAdapter.set(TestAppAdapter())
+        OkHttpConnectionFactory.CLIENT = createTestClient()
         activity = Robolectric.buildActivity(MainActivity::class.java).create().get()
 
         fragment = NearbyParentFragment()
@@ -226,17 +216,6 @@ class NearbyParentFragmentUnitTest {
         verify(applicationKvStore, times(1))
             .putBoolean("doNotAskForLocationPermission", true)
         verify(presenter, times(1)).onMapReady()
-        val position = CameraPosition.Builder()
-            .target(
-                LatLng(
-                    51.50550,
-                    -0.07520, 0.0
-                )
-            )
-            .zoom(0.0)
-            .build()
-        verify(mapBox, times(1))
-            .moveCamera(CameraUpdateFactory.newCameraPosition(position))
     }
 
     @Test @Ignore
@@ -253,17 +232,6 @@ class NearbyParentFragmentUnitTest {
         verify(applicationKvStore, times(1))
             .putBoolean("doNotAskForLocationPermission", true)
         verify(presenter, times(1)).onMapReady()
-        val position = CameraPosition.Builder()
-            .target(
-                LatLng(
-                    23.76,
-                    56.876, 0.0
-                )
-            )
-            .zoom(14.0)
-            .build()
-        verify(mapBox, times(1))
-            .moveCamera(CameraUpdateFactory.newCameraPosition(position))
     }
 
     @Test @Ignore
@@ -394,14 +362,12 @@ class NearbyParentFragmentUnitTest {
     @Test @Ignore
     @Throws(Exception::class)
     fun testDisplayBottomSheetWithInfo() {
-        val nearbyBaseMarker = mock(NearbyBaseMarker::class.java)
+        val nearbyBaseMarker = mock(BaseMarker::class.java)
         val place = mock(Place::class.java)
         val label = mock(Label::class.java)
-        whenever(marker.nearbyBaseMarker).thenReturn(nearbyBaseMarker)
         whenever(nearbyBaseMarker.place).thenReturn(place)
         whenever(place.label).thenReturn(label)
         whenever(place.longDescription).thenReturn("")
-        fragment.displayBottomSheetWithInfo(marker)
         verify(bottomSheetBehavior).state = BottomSheetBehavior.STATE_COLLAPSED
     }
 

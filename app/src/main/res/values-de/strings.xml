@@ -4,6 +4,7 @@
 * Bjarncraft
 * Brettchenweber
 * Bxalber
+* Celineharding
 * Elliot
 * Envlh
 * FF-11
@@ -27,6 +28,7 @@
 * Tacsipacsi
 * ThisCarthing
 * Tobi 406
+* TomatoCake
 * Twistqj
 * Ubahnverleih
 * Umherirrender
@@ -267,6 +269,7 @@
   <string name="navigation_item_about">Über</string>
   <string name="navigation_item_settings">Einstellungen</string>
   <string name="navigation_item_feedback">Rückmeldungen</string>
+  <string name="navigation_item_feedback_github">Feedback über GitHub</string>
   <string name="navigation_item_logout">Abmelden</string>
   <string name="navigation_item_info">Anleitung</string>
   <string name="navigation_item_notification">Benachrichtigungen</string>
@@ -376,6 +379,7 @@
   <string name="share_app_title">App teilen</string>
   <string name="rotate">Drehen</string>
   <string name="error_fetching_nearby_places">Fehler beim Abrufen der Orte in der Nähe.</string>
+  <string name="no_pictures_in_this_area">Keine Bilder in diesem Bereich</string>
   <string name="no_nearby_places_around">Keine Orte in der Nähe gefunden</string>
   <string name="error_fetching_nearby_monuments">Fehler beim Abrufen von Denkmälern in der Nähe.</string>
   <string name="no_recent_searches">Keine letzten Suchanfragen</string>
@@ -450,7 +454,7 @@
   <string name="never_ask_again">Nicht erneut fragen</string>
   <string name="display_location_permission_title">Standortberechtigung anfragen</string>
   <string name="display_location_permission_explanation">Anfrage für eine Standortberechtigung, die für die Nachbarbenachrichtigungskartenansichtsfunktion erforderlich ist.</string>
-  <string name="achievements_fetch_failed">Etwas ist schiefgelaufen. Wir konnten deine Errungenschaften nicht abrufen.</string>
+  <string name="achievements_fetch_failed">Etwas ist schiefgelaufen. Wir konnten keine Erfolge abrufen</string>
   <string name="achievements_fetch_failed_ultimate_achievement">Du hast so viele Beiträge geleistet, dass unser Leistungsberechnungssystem damit nicht zurechtkommt. Dies ist die ultimative Leistung.</string>
   <string name="ends_on">Endet am:</string>
   <string name="display_campaigns">Kampagnen anzeigen</string>
@@ -590,7 +594,7 @@
   <string name="place_state_needs_photo">Benötigt Foto</string>
   <string name="place_type">Platztyp:</string>
   <string name="nearby_search_hint">Brücke, Museum, Hotel etc.</string>
-  <string name="you_must_reset_your_passsword">Bei der Anmeldung ist etwas schiefgelaufen, du musst dein Passwort zurücksetzen!</string>
+  <string name="you_must_reset_your_passsword">Bei der Anmeldung ist etwas schiefgelaufen. Du musst dein Passwort zurücksetzen!</string>
   <string name="title_for_media">MEDIA</string>
   <string name="title_for_child_classes">CHILD CLASSES</string>
   <string name="title_for_parent_classes">PARENT CLASSES</string>
@@ -699,6 +703,8 @@
   <string name="welcome_custom_selector_ok">Großartig</string>
   <string name="custom_selector_already_uploaded_image_text">Dieses Bild ist bereits auf Commons hochgeladen worden.</string>
   <string name="custom_selector_over_limit_warning">Aus technischen Gründen kann die Anwendung nicht mehr als %1$d Bilder auf einmal verlässlich hochladen. Die Grenze für das Hochladen von %1$d wurde um %2$d überschritten.</string>
+  <string name="custom_selector_dismiss_limit_warning_button_text">Ausblenden</string>
+  <string name="custom_selector_button_limit_text">Max: %1$d</string>
   <string name="custom_selector_limit_error_desc">Fehler: Grenze für das Hochladen wurde überschritten</string>
   <string name="wlm_upload_info">Dieses Bild wird am Wettbewerb Wiki Loves Monuments teilnehmen</string>
   <string name="display_monuments">Denkmäler anzeigen</string>
@@ -722,8 +728,8 @@
   <string name="add_location">Standort hinzufügen</string>
   <string name="feedback_sharing_data_alert">Bitte entferne aus dieser E-Mail alle Informationen, die du nicht öffentlich mitteilen möchtest. Bitte beachte auch, dass deine E-Mail-Adresse, mit der du schreibst, sowie der dazugehörige Name und das Profilbild öffentlich sichtbar sind.</string>
   <string name="explore_map_details">Einzelheiten</string>
-  <string name="achievements_unavailable_beta">Erfolge sind nur in der Prod-Variante verfügbar, bitte schaue in der Entwicklerdokumentation nach.</string>
-  <string name="leaderboard_unavailable_beta">Die Bestenliste ist nur in der Prod-Variante verfügbar, bitte schaue in der Entwicklerdokumentation nach.</string>
+  <string name="achievements_unavailable_beta">Erfolge sind nur in der Prod-Variante verfügbar. Bitte schaue in der Entwicklerdokumentation nach.</string>
+  <string name="leaderboard_unavailable_beta">Die Bestenliste ist nur in der Prod-Variante verfügbar. Bitte schaue in der Entwicklerdokumentation nach.</string>
   <string name="copyright_popup">Bitte lade nur Bilder hoch, die du selbst aufgenommen hast. Wer urheberrechtlich geschützte Bilder hochlädt, wird gesperrt. Dies gilt auch für die Beta-Variante. Vielen Dank, dass du die App getestet hast!</string>
   <string name="select_feedback_data_choice">Bitte hebe die Markierung aller Informationen auf, die du nicht mit der Öffentlichkeit teilen möchtest.</string>
   <string name="api_level">API-Level</string>
@@ -748,6 +754,8 @@
   <string name="image_selected">Bild ausgewählt</string>
   <string name="image_marked_as_not_for_upload">Bild als nicht zum Hochladen markiert</string>
   <string name="menu_view_report">Meldung</string>
+  <string name="menu_view_set_white_background">Weißen Hintergrund einstellen</string>
+  <string name="menu_view_set_black_background">Schwarzen Hintergrund einstellen</string>
   <string name="report_violation">Verstoß melden</string>
   <string name="report_user">Diesen Benutzer melden</string>
   <string name="report_content">Diesen Inhalt melden</string>
@@ -760,6 +768,13 @@
   <string name="storage_permissions_denied">Speicherberechtigungen verweigert</string>
   <string name="unable_to_share_upload_item">Dieser Artikel kann nicht geteilt werden</string>
   <string name="permissions_are_required_for_functionality">Für die Funktionalität sind Berechtigungen erforderlich</string>
+  <string name="see_your_achievements">Deine Erfolge ansehen</string>
+  <string name="edit_image">Bild bearbeiten</string>
+  <string name="edit_location">Standort beabeiten</string>
+  <string name="location_updated">Standort aktualisiert!</string>
+  <string name="remove_location">Standort entfernen</string>
+  <string name="remove_location_warning_title">Standortwarnung entfernen</string>
+  <string name="send_thanks_to_author">Dem Autor danken</string>
   <plurals name="custom_picker_images_selected_title_appendix">
     <item quantity="one">%d Bild ausgewählt</item>
     <item quantity="other"> %d Bilder ausgewählt</item>
