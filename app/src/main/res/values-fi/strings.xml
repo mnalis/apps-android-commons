@@ -240,7 +240,7 @@
   <string name="navigation_item_logout">Kirjaudu ulos</string>
   <string name="navigation_item_info">Opas</string>
   <string name="navigation_item_notification">Ilmoitukset</string>
-  <string name="navigation_item_review">Tarkasta</string>
+  <string name="navigation_item_review">Arviointi</string>
   <string name="no_description_found">kuvausta ei löytynyt</string>
   <string name="nearby_info_menu_commons_article">Commons-tiedostosivu</string>
   <string name="nearby_info_menu_wikidata_article">Wikidata-kohde</string>
@@ -343,7 +343,7 @@
   <string name="quiz_screenshot_question">Onko tämä kuvakaappaus OK tallennettavaksi?</string>
   <string name="share_app_title">Jaa sovellus</string>
   <string name="rotate">Kierrä</string>
-  <string name="error_fetching_nearby_places">Virhe paikkoja haettaessa.</string>
+  <string name="error_fetching_nearby_places">Virhe läheisiä paikkoja ladatessa</string>
   <string name="error_fetching_nearby_monuments">Virhe läheisiä monumentteja haettaessa.</string>
   <string name="no_recent_searches">Ei viimeaikaisia hakuja</string>
   <string name="delete_recent_searches_dialog">Haluatko varmasti tyhjentää hakuhistoriasi?</string>
@@ -522,7 +522,7 @@
   <string name="coordinates_edit_helper_edit_message_else">Koordinaatteja ei voitu lisätä.</string>
   <string name="description_edit_helper_edit_message_else">Kuvauksia ei voitu lisätä.</string>
   <string name="caption_edit_helper_edit_message_else">Kuvatekstiä ei voitu lisätä.</string>
-  <string name="coordinates_picking_unsuccessful">Koordinaattien haku epäonnistui.</string>
+  <string name="coordinates_picking_unsuccessful" fuzzy="true">Koordinaattien haku epäonnistui.</string>
   <string name="descriptions_picking_unsuccessful">Kuvauksia ei voitu hakea.</string>
   <string name="description_activity_title">Muokkaa kuvauksia ja kuvatekstejä</string>
   <string name="share_image_via">Jaa kuva</string>
@@ -669,6 +669,10 @@
   <string name="location_removed">Sijainti poistettu!</string>
   <string name="send_thanks_to_author">Kiitä tekijää</string>
   <string name="file_saved_successfully">Tiedosto tallennettu onnistuneesti</string>
+  <string name="do_you_want_to_open_gpx_file">Haluatko avata GPX-tiedoston?</string>
+  <string name="do_you_want_to_open_kml_file">Haluatko avata KML-tiedoston?</string>
+  <string name="failed_to_save_kml_file">KML-tiedoston tallentaminen epäonnistui.</string>
+  <string name="failed_to_save_gpx_file">GPX-tiedoston tallentaminen epäonnistui.</string>
   <plurals name="custom_picker_images_selected_title_appendix">
     <item quantity="one">%d kuva valittu</item>
     <item quantity="other">%d kuvaa valittu</item>
