@@ -67,8 +67,8 @@
   <string name="signup">Eman izena</string>
   <string name="logging_in_title">Saioa hasten</string>
   <string name="logging_in_message">Mesedez itxaron…</string>
-  <string name="login_success" fuzzy="true">Saio hasiera egina</string>
-  <string name="login_failed" fuzzy="true">Saio hasieran akatsa!</string>
+  <string name="login_success">Sarrera arrakastatsua!</string>
+  <string name="login_failed">Saio hasieran akatsa!</string>
   <string name="upload_failed">Fitxategia ez da aurkitu. Mesedez saiatu beste batekin.</string>
   <string name="authentication_failed" fuzzy="true">Autentifikazioan akatsa, mesedez saiatu berriro sartzen</string>
   <string name="uploading_started">Igoera hasi da!</string>
@@ -86,7 +86,7 @@
   <string name="contribution_state_starting">Igotzen</string>
   <string name="menu_from_gallery">Galeriatik</string>
   <string name="menu_from_camera">Argazkia egin</string>
-  <string name="menu_nearby">Gertukoak</string>
+  <string name="menu_nearby">Hurbilekoak</string>
   <string name="provider_contributions">Nire igoerak</string>
   <string name="menu_share">Partekatu</string>
   <string name="menu_view_file_page">Ikusi fitxategiaren orria</string>
@@ -202,7 +202,7 @@
   <string name="navigation_drawer_close">Itxi</string>
   <string name="navigation_item_home">Hasiera</string>
   <string name="navigation_item_upload">Igo</string>
-  <string name="navigation_item_nearby">Gertukoak</string>
+  <string name="navigation_item_nearby">Hurbilekoak</string>
   <string name="navigation_item_about">Honi buruz</string>
   <string name="navigation_item_settings">Ezarpenak</string>
   <string name="navigation_item_feedback">Feedback</string>
@@ -231,8 +231,8 @@
   <string name="nominated_for_deletion">Irudi hau ezabaketarako izendatua izan da.</string>
   <string name="skip_login">Jauzi</string>
   <string name="navigation_item_login">Hasi saioa</string>
-  <string name="skip_login_title" fuzzy="true">Benetan saioa hastea jauzi nahi duzula?</string>
-  <string name="skip_login_message">Argazkiak igotzeko saioa hasi beharko duzu.</string>
+  <string name="skip_login_title">Benetan saioa hastea jauzi nahi duzula?</string>
+  <string name="skip_login_message" fuzzy="true">Argazkiak igotzeko saioa hasi beharko duzu.</string>
   <string name="login_alert_message">Mesedez, hasi saioa funtzio hau erabili ahal izateko</string>
   <string name="nearby_location_not_available">Kokapena ez dago erabilgarri.</string>
   <string name="location_permission_rationale_nearby">Baimena beharrezkoa da hurbil dauden lekuen zerrende ikusteko</string>
@@ -316,7 +316,7 @@
   <string name="error_occurred">Errorea gertatu da!</string>
   <string name="notifications_channel_name_all">Commons Jakinarazpena</string>
   <string name="contributions_fragment">Ekarpenak</string>
-  <string name="nearby_fragment">Gertukoak</string>
+  <string name="nearby_fragment">Hurbilekoak</string>
   <string name="notifications">Jakinarazpenak</string>
   <string name="read_notifications">Jakinarazpenak (irakurriak)</string>
   <string name="list_sheet">Zerrenda</string>
@@ -357,5 +357,5 @@
   <string name="leaderboard_column_user">Erabiltzailea</string>
   <string name="leaderboard_column_count">Zenbaketa</string>
   <string name="leaderboard_upload">Igo</string>
-  <string name="leaderboard_nearby">Gertukoak</string>
+  <string name="leaderboard_nearby">Hurbilekoak</string>
 </resources>

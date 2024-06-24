@@ -264,7 +264,7 @@
   <string name="skip_login">Preskoči</string>
   <string name="navigation_item_login">Prijavi me</string>
   <string name="skip_login_title" fuzzy="true">Zaista želite da preskočite prijavu?</string>
-  <string name="skip_login_message">Moraćete da se prijavite da biste otpremali slike u budućnosti.</string>
+  <string name="skip_login_message" fuzzy="true">Moraćete da se prijavite da biste otpremali slike u budućnosti.</string>
   <string name="login_alert_message">Prijavite se da biste koristili ovu funkciju</string>
   <string name="copy_wikicode">Kopiraj vikitekst</string>
   <string name="wikicode_copied">Vikitekst je kopiran u privremenu memoriju</string>
@@ -545,7 +545,7 @@
   <string name="nearby_search_hint">Most, muzej, hotel itd.</string>
   <string name="you_must_reset_your_passsword" fuzzy="true">Došlo je do greške sa prijavljivanjem, morate da promenite vašu lozinku !!</string>
   <string name="upload_nearby_place_found_title">Obližnje mesto je pronađeno</string>
-  <string name="upload_nearby_place_found_description">Da li je ovo fotografija %1$s?</string>
+  <string name="upload_nearby_place_found_description_singular" fuzzy="true">Da li je ovo fotografija %1$s?</string>
   <string name="title_app_shortcut_bookmark">Obeleživači</string>
   <string name="title_app_shortcut_setting">Podešavanja</string>
   <string name="remove_bookmark">Uklonjeno iz obeleživača</string>

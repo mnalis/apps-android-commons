@@ -316,7 +316,7 @@
   <string name="skip_login">Omitir</string>
   <string name="navigation_item_login">Acceder</string>
   <string name="skip_login_title">¿Quieres realmente omitir el inicio de sesión?</string>
-  <string name="skip_login_message">Deberías iniciar sesión para subir imágenes en el futuro.</string>
+  <string name="skip_login_message" fuzzy="true">Deberías iniciar sesión para subir imágenes en el futuro.</string>
   <string name="login_alert_message">Por favor inicia sesion para usar esta característica</string>
   <string name="copy_wikicode">Copia el wikitexto al portapapeles</string>
   <string name="wikicode_copied">El wikitexto fue copiado al portapapeles</string>
@@ -615,7 +615,8 @@
   <string name="title_for_child_classes">CLASES HIJAS</string>
   <string name="title_for_parent_classes">CLASES PADRES</string>
   <string name="upload_nearby_place_found_title">Lugar cercano encontrado</string>
-  <string name="upload_nearby_place_found_description">¿Esta foto es de %1$s?</string>
+  <string name="upload_nearby_place_found_description_plural">¿Son estas imágenes de %1$s?</string>
+  <string name="upload_nearby_place_found_description_singular">¿Es esta una imagen de %1$s?</string>
   <string name="title_app_shortcut_bookmark">Marcadores</string>
   <string name="title_app_shortcut_setting">Configuración</string>
   <string name="remove_bookmark">removido de marcadores</string>
@@ -804,4 +805,6 @@
     <item quantity="one">%d imagen seleccionada</item>
     <item quantity="other">%d imagenes seleccionadas</item>
   </plurals>
+  <string name="multiple_files_depiction">Recuerde que todas las imágenes en una carga múltiple tienen la misma categoría y representación. Si las imágenes no comparten representación y categoría, haga varias cargas por separado.</string>
+  <string name="multiple_files_depiction_header">Nota sobre cargas múltiples</string>
 </resources>

@@ -285,7 +285,7 @@
   <string name="skip_login">Preskoči</string>
   <string name="navigation_item_login">Prijava</string>
   <string name="skip_login_title" fuzzy="true">Ali res želite preskočiti prijavo?</string>
-  <string name="skip_login_message">V prihodnosti se boste morali za nalaganje slik prijaviti.</string>
+  <string name="skip_login_message" fuzzy="true">V prihodnosti se boste morali za nalaganje slik prijaviti.</string>
   <string name="login_alert_message">Za uporabo te možnosti se prijavite</string>
   <string name="copy_wikicode">Kopiraj vikibesedilo v odložišče</string>
   <string name="wikicode_copied">Vikibesedilo je skopirano v odložišče</string>
@@ -586,7 +586,7 @@
   <string name="title_for_child_classes">PODREJENI RAZREDI</string>
   <string name="title_for_parent_classes">NADREJENI RAZREDI</string>
   <string name="upload_nearby_place_found_title">Najden bližnji kraj</string>
-  <string name="upload_nearby_place_found_description">Ali je to fotografija kraja %1$s?</string>
+  <string name="upload_nearby_place_found_description_singular" fuzzy="true">Ali je to fotografija kraja %1$s?</string>
   <string name="title_app_shortcut_bookmark">Zaznamki</string>
   <string name="title_app_shortcut_setting">Nastavitve</string>
   <string name="remove_bookmark">Odstranjeno iz zaznamkov</string>

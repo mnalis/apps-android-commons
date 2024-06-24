@@ -292,7 +292,7 @@
   <string name="skip_login">略過</string>
   <string name="navigation_item_login">登入</string>
   <string name="skip_login_title">您確定要略過登入嗎？</string>
-  <string name="skip_login_message">之後您需要登入才能上傳圖片。</string>
+  <string name="skip_login_message">您之後需要登入才能上傳圖片。</string>
   <string name="login_alert_message">請登入來使用此功能</string>
   <string name="copy_wikicode">複製 wikitext 到剪貼簿</string>
   <string name="wikicode_copied">Wikitext 已複製到剪貼簿</string>
@@ -591,7 +591,8 @@
   <string name="title_for_child_classes">子類別</string>
   <string name="title_for_parent_classes">父類別</string>
   <string name="upload_nearby_place_found_title">找到附近地點</string>
-  <string name="upload_nearby_place_found_description">這是%1$s的照片嗎？</string>
+  <string name="upload_nearby_place_found_description_plural">這些是%1$s的圖片嗎？</string>
+  <string name="upload_nearby_place_found_description_singular">這是%1$s的圖片嗎？</string>
   <string name="title_app_shortcut_bookmark">書籤</string>
   <string name="title_app_shortcut_setting">設定</string>
   <string name="remove_bookmark">已從書籤刪除</string>
@@ -789,4 +790,7 @@
     <item quantity="one">已選 %d 張圖片</item>
     <item quantity="other">已選 %d 張圖片</item>
   </plurals>
+  <string name="multiple_files_depiction">請記住，多重上傳中的所有圖片都會取得相同的分類和描述。如果圖片不要共享描述和分類，請執行多次單筆上傳。</string>
+  <string name="multiple_files_depiction_header">關於多次上傳的註釋</string>
+  <string name="feedback_destination_note">您的回饋已發布到以下 wiki 頁面：&lt;a href=\"https://commons.wikimedia.org/wiki/Commons:Mobile_app/Feedback\"&gt;Commons:Mobile app/Feedback&lt;/a&gt;</string>
 </resources>
