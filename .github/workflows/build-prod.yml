@@ -1,0 +1,39 @@
+name: Build prod only
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Access test login credentials
+      run: |
+        echo "TEST_USER_NAME=${{ secrets.TEST_USER_NAME }}" >> local.properties
+        echo "TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}" >> local.properties
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Generate prodDebug APK
+      run: bash ./gradlew assembleProdDebug --stacktrace
+
+    - name: Rename prodDebug APK
+      run: mv app/build/outputs/apk/prod/debug/app-*.apk app/build/outputs/apk/prod/debug/apps-android-commons-prodDebug-$(git log -n 1 --format='%h').apk
+
+    - name: Upload prodDebug APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: prodDebugAPK
+        path: app/build/outputs/apk/prod/debug/*.apk
+        retention-days: 30
+
