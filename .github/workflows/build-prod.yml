@@ -31,7 +31,7 @@ jobs:
       run: mv app/build/outputs/apk/prod/debug/app-*.apk app/build/outputs/apk/prod/debug/apps-android-commons-prodDebug-$(git log -n 1 --format='%h').apk
 
     - name: Upload prodDebug APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: prodDebugAPK
         path: app/build/outputs/apk/prod/debug/*.apk
