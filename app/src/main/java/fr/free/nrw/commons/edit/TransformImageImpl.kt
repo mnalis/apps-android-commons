@@ -44,18 +44,16 @@ class TransformImageImpl : TransformImage {
                 val lljTran = LLJTran(imageFile)
                 lljTran.read(
                     LLJTran.READ_ALL,
-                    false,
+                    true,
                 ) // This could throw an LLJTranException. I am not catching it for now... Let's see.
                 lljTran.transform(
                     when (degree) {
                         90 -> LLJTran.ROT_90
                         180 -> LLJTran.ROT_180
                         270 -> LLJTran.ROT_270
-                        else -> {
-                          // no rotation if degree = 0 or 360
-                          LLJTran.OPT_DEFAULTS
-                        }
+                        else -> NONE // no rotation if degree = 0 or 360
                     },
+                    LLJTran.OPT_DEFAULTS or LLJTran.OPT_XFORM_ORIENTATION
                 )
                 BufferedOutputStream(FileOutputStream(output)).use { writer ->
                     lljTran.save(writer, LLJTran.OPT_WRITE_ALL)
