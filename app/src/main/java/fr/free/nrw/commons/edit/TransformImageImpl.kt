@@ -51,7 +51,7 @@ class TransformImageImpl : TransformImage {
                         90 -> LLJTran.ROT_90
                         180 -> LLJTran.ROT_180
                         270 -> LLJTran.ROT_270
-                        else -> NONE // no rotation if degree = 0 or 360
+                        else -> LLJTran.NONE // no rotation if degree = 0 or 360
                     },
                     LLJTran.OPT_DEFAULTS or LLJTran.OPT_XFORM_ORIENTATION
                 )
